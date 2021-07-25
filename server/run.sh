@@ -7,7 +7,7 @@ then
     python3 motor_control.py 
     killall python3
 else
-    echo Running the sart-control server...
+    echo Running the robot-control server...
     python3 app.py
     killall python3
 fi

@@ -37,7 +37,8 @@ def video_feed():
 @app.route('/motor_control', methods=['POST'])
 def motor_control():
     if request.method == 'POST':
-        keystrokes = request.form['data']
+        print(request.json)
+        keystrokes = request.json['data']
         while keystrokes != []:
             if keystrokes[0] == 'Up':
                 motors.move_forward()
@@ -51,7 +52,7 @@ def motor_control():
                 exit()
             keystrokes = keystrokes[1:]
         motors.stop_moving()
-    return None
+    return ""
 
 
 if __name__ == '__main__':

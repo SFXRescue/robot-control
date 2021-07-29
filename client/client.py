@@ -16,7 +16,7 @@ def main():
         if len(keystrokes) > 0:
             print(keystrokes)
             try:
-                requests.post(url, data={'data': keystrokes})
+                requests.post(url, json={'data': keystrokes})
             except:
                 print("Error: could not send data to robot.")
             keystrokes = []

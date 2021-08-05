@@ -33,49 +33,49 @@ class MotorController:
     def move_forward(self):
         print ("FORWARD MOTION")
         #All motors move forwards
-        GPIO.output(self.Motor1['input1'], GPIO.HIGH)
-        GPIO.output(self.Motor1['input2'], GPIO.LOW)
-        GPIO.output(self.Motor2['input1'], GPIO.HIGH)
-        GPIO.output(self.Motor2['input2'], GPIO.LOW)
         for x in range(40,100):
             self.EN1.ChangeDutyCycle(x)
             self.EN2.ChangeDutyCycle(x)
+            GPIO.output(self.Motor1['input1'], GPIO.HIGH)
+            GPIO.output(self.Motor1['input2'], GPIO.LOW)
+            GPIO.output(self.Motor2['input1'], GPIO.HIGH)
+            GPIO.output(self.Motor2['input2'], GPIO.LOW)
 
 
     def move_backward(self):
         print ("BACKWARD MOTION")
         #All motors move backwards
-        GPIO.output(self.Motor1['input1'], GPIO.LOW)
-        GPIO.output(self.Motor1['input2'], GPIO.HIGH)
-        GPIO.output(self.Motor2['input1'], GPIO.LOW)
-        GPIO.output(self.Motor2['input2'], GPIO.HIGH)
         for x in range(40,100):
             self.EN1.ChangeDutyCycle(x)
             self.EN2.ChangeDutyCycle(x)
+            GPIO.output(self.Motor1['input1'], GPIO.LOW)
+            GPIO.output(self.Motor1['input2'], GPIO.HIGH)
+            GPIO.output(self.Motor2['input1'], GPIO.LOW)
+            GPIO.output(self.Motor2['input2'], GPIO.HIGH)
 
 
     def turn_left(self):
         print ("LEFT MOTION")
         #One motor moves forward, while the other moves backwards
-        GPIO.output(self.Motor1['input1'], GPIO.LOW)
-        GPIO.output(self.Motor1['input2'], GPIO.HIGH)
-        GPIO.output(self.Motor2['input1'], GPIO.HIGH)
-        GPIO.output(self.Motor2['input2'], GPIO.LOW)
         for x in range(40,100):
             self.EN1.ChangeDutyCycle(x)
             self.EN2.ChangeDutyCycle(x)
+            GPIO.output(self.Motor1['input1'], GPIO.LOW)
+            GPIO.output(self.Motor1['input2'], GPIO.HIGH)
+            GPIO.output(self.Motor2['input1'], GPIO.HIGH)
+            GPIO.output(self.Motor2['input2'], GPIO.LOW)
 
 
     def turn_right(self):
         print ("RIGHT MOTION")
         #One motor moves backwards, while the other moves forwards
-        GPIO.output(self.Motor1['input1'], GPIO.HIGH)
-        GPIO.output(self.Motor1['input2'], GPIO.LOW)
-        GPIO.output(self.Motor2['input1'], GPIO.LOW)
-        GPIO.output(self.Motor2['input2'], GPIO.HIGH)
         for x in range(40,100):
             self.EN1.ChangeDutyCycle(x)
             self.EN2.ChangeDutyCycle(x)
+            GPIO.output(self.Motor1['input1'], GPIO.HIGH)
+            GPIO.output(self.Motor1['input2'], GPIO.LOW)
+            GPIO.output(self.Motor2['input1'], GPIO.LOW)
+            GPIO.output(self.Motor2['input2'], GPIO.HIGH)
         
 
     def stop_moving(self):

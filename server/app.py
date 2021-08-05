@@ -7,6 +7,8 @@ from flask import Flask, render_template, Response, request
 from camera import VideoCamera
 from motor_control import MotorController
 from json import loads
+from multiprocessing import Process, Pipe
+
 
 # camera object
 pi_camera = VideoCamera(flip=True)
@@ -21,6 +23,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 def gen(camera):
     while True:
@@ -38,19 +41,7 @@ def video_feed():
 def motor_control():
     if request.method == 'POST':
         keystrokes = request.json['data']
-        while keystrokes != []:
-            if keystrokes[0] == 'Up':
-                motors.move_forward()
-            if keystrokes[0] == 'Down':
-                motors.move_backward()
-            if keystrokes[0] == 'Left':
-                motors.turn_left()
-            if keystrokes[0] == 'Right':
-                motors.turn_right()
-            if keystrokes[0] == 'Ctrl+c':
-                exit()
-            keystrokes = keystrokes[1:]
-        motors.stop_moving()
+        # pipe the new keystrokes data to the thread running motor control
     return ""
 
 

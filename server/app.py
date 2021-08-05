@@ -8,6 +8,7 @@ from camera import VideoCamera
 from motor_control import MotorController
 from json import loads
 from multiprocessing import Process, Pipe
+from motor_process import motor_control_process
 
 
 # camera object

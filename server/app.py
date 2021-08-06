@@ -8,6 +8,7 @@ import multiprocessing
 from flask import Flask, render_template, Response, request
 from json import loads
 from multiprocessing import Process, Pipe
+from motor_process import motor_control_process
 
 # import from other files
 from camera import VideoCamera

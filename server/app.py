@@ -24,6 +24,8 @@ motors = MotorController()
 # process for controlling motors on separate thread
 # pass motor controller and empty list (current instructions) as arguments
 process = multiprocessing.Process(target=motor_control_process, args=(motors,[]))
+print("Motor motion process has started on the server.")
+process.start()
 
 # web app object
 app = Flask(__name__)

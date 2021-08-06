@@ -2,19 +2,27 @@
 #Date: 27.09.20
 #Desc: This web application serves a motion JPEG stream
 # main.py
-# import the necessary packages
+
+# import packages
+import multiprocessing
 from flask import Flask, render_template, Response, request
-from camera import VideoCamera
-from motor_control import MotorController
 from json import loads
 from multiprocessing import Process, Pipe
 
+# import from other files
+from camera import VideoCamera
+from motor_control import MotorController
+from motor_process import motor_control_process
 
 # camera object
 pi_camera = VideoCamera(flip=True)
 
 # motor controller object
 motors = MotorController()
+
+# process for controlling motors on separate thread
+# pass motor controller and empty list (current instructions) as arguments
+process = multiprocessing.Process(target=motor_control_process, args=(motors,[]))
 
 # web app object
 app = Flask(__name__)

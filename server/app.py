@@ -3,32 +3,39 @@
 #Desc: This web application serves a motion JPEG stream
 # main.py
 
+
 # import packages
-import multiprocessing
 from flask import Flask, render_template, Response, request
 from json import loads
 from multiprocessing import Process, Pipe
 from motor_process import motor_control_process
-
-# import from other files
 from camera import VideoCamera
 from motor_control import MotorController
 from motor_process import motor_control_process
 
+
 # camera object
 pi_camera = VideoCamera(flip=True)
 
+
 # motor controller object
-motors = MotorController()
+motor_controller = MotorController()
+
+
+# pipe communication endpoints
+parent, child = Pipe()
+
 
 # process for controlling motors on separate thread
-# pass motor controller and empty list (current instructions) as arguments
-process = multiprocessing.Process(target=motor_control_process, args=(motors,[]))
+# give it one end of pipe communication (child)
+motors = Process(target=motor_control_process, args=(motor_controller,child))
+motors.start()
 print("Motor motion process has started on the server.")
-process.start()
+
 
 # web app object
 app = Flask(__name__)
+
 
 # home route
 @app.route('/')
@@ -52,9 +59,11 @@ def video_feed():
 def motor_control():
     if request.method == 'POST':
         keystrokes = request.json['data']
-        # pipe the new keystrokes data to the thread running motor control
+        parent.send(keystrokes) # send keystrokes to pipe endpoint in motor process
+        print(keystrokes) # debug text
     return ""
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)
+    motors.join()

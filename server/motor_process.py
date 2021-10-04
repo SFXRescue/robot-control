@@ -2,7 +2,7 @@
 from motor_control import MotorController
 
 """function to run concurrently in app.py"""
-def motor_control_process(motors, pipe):
+def motor_control_process(motors, pipe_endpoint):
 
     # initialize keys to empty
     keys = []
@@ -11,7 +11,7 @@ def motor_control_process(motors, pipe):
 
         # receive key data from pipe
         # NOTE: double-check with someone that this will work
-        keys = pipe.recv()
+        keys = pipe_endpoint.recv()
 
         if "Up" in keys:
             motors.move_forward()

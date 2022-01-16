@@ -1,6 +1,6 @@
 
 """function to run concurrently in app.py"""
-def motor_control_process(motors, pipe_endpoint):
+def motor_control_process(motor_controller, child):
 
     # initialize keys to empty
     keys = []
@@ -9,19 +9,19 @@ def motor_control_process(motors, pipe_endpoint):
 
         # receive key data from pipe
         # NOTE: double-check with someone that this will work
-        keys = pipe_endpoint.recv()
+        keys = child.recv()
 
         if "Up" in keys:
-            motors.move_forward()
+            motor_controller.move_forward()
 
         elif "Down" in keys:
-            motors.move_backward()
+            motor_controller.move_backward()
         
         if "Left" in keys:
-            motors.turn_left()
+            motor_controller.turn_left()
             
         elif "Right" in keys:
-            motors.turn_right()
+            motor_controller.turn_right()
 
         if "Ctrl+c" in keys:
             break

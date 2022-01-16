@@ -1,6 +1,4 @@
 
-from motor_control import MotorController
-
 """function to run concurrently in app.py"""
 def motor_control_process(motors, pipe_endpoint):
 

@@ -9,7 +9,8 @@ def motor_control_process(motor_controller, child):
 
         # receive key data from pipe
         # NOTE: double-check with someone that this will work
-        keys = child.recv()
+        if child.poll():
+            keys = child.recv()
 
         if "Up" in keys:
             motor_controller.move_forward()

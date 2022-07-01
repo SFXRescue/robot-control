@@ -5,6 +5,13 @@
 
 
 # import packages
+
+import argparse
+ap = argparse.ArgumentParser()
+ap.add_argument('-vs', '--videosource', default='r', help='-vs r for robot, -vs w for webcam.')
+ap.add_argument('-em', '--enablemotors', default='e', help='-en e for enable, -en d for disable.')
+args = vars(ap.parse_args())
+
 from flask import Flask, render_template, Response, request
 from json import loads
 from multiprocessing import Process, Pipe
@@ -13,46 +20,23 @@ from camera import VideoCamera
 from motor_control import MotorController
 from motor_process import motor_control_process
 
-
-# camera object
-pi_camera = VideoCamera(flip=True)
-
-
-# motor controller object
+pi_camera = VideoCamera(flip=True, videosource=args['videosource'])
 motor_controller = MotorController()
-
-
-# pipe communication endpoints
 parent, child = Pipe()
-
-
-# process for controlling motors on separate thread
-# give it one end of pipe communication (child)
 motors = Process(target=motor_control_process, args=(motor_controller,child))
 motors.start()
 print("Motor motion process has started on the server.")
-
-
-# web app object
 app = Flask(__name__)
 
 
-# home route
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-def gen(camera):
-    while True:
-        frame = camera.get_frame()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
-
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen(pi_camera), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(pi_camera.gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/motor_control', methods=['POST'])

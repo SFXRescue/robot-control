@@ -1,6 +1,5 @@
 #importing libraries
 import RPi.GPIO as GPIO
-import keyboard
 #The specific elements from the libraries you require
 from time import sleep
 
@@ -90,7 +89,7 @@ class MotorController:
 
 # run the old functionality if this file is run in the old way
 if __name__ == "__main__":
-    
+    import keyboard    
     controller = MotorController()
     while True:
         #If up arrow key is pressed

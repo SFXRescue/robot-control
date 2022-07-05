@@ -12,7 +12,7 @@ def motor_control_process(motor_controller : MotorController, key_presses : Queu
 
         if not key_presses.empty():
             keys = key_presses.get()
-            print(keys)
+        print(keys)
 
         if "Up" in keys:
             motor_controller.move_forward()

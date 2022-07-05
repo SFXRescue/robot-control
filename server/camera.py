@@ -3,16 +3,17 @@
 #Desc: This scrtipt script..
 
 import cv2
-import imutils
 import time
 import numpy as np
 
 class VideoCamera(object):
     def __init__(self, flip=False, videosource='w'):
         if videosource == 'r':
-            self.vs = imutils.video.pivideostream.PiVideoStream().start()
+            from imutils.video.pivideostream import PiVideoStream
+            self.vs = PiVideoStream().start()
         elif videosource == 'w':
-            self.vs = imutils.video.VideoStream(src=0).start()
+            from imutils.video import VideoStream
+            self.vs = VideoStream(src=0).start()
         self.flip = flip
         time.sleep(2.0)
 

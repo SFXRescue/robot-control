@@ -14,17 +14,18 @@ args = vars(ap.parse_args())
 
 from flask import Flask, render_template, Response, request
 from json import loads
-from multiprocessing import Process, Pipe
+import threading
+from queue import Queue
 from motor_process import motor_control_process
 from camera import VideoCamera
 from motor_control import MotorController
 from motor_process import motor_control_process
 
-pi_camera = VideoCamera(flip=True, videosource=args['videosource'])
-motor_controller = MotorController()
-parent, child = Pipe()
-motors = Process(target=motor_control_process, args=(motor_controller,child))
-motors.start()
+pi_camera = VideoCamera(flip=False, videosource=args['videosource'])
+motor_controller = MotorController(robot_mode=('e'==args['enablemotors']))
+key_presses = Queue()
+motors = threading.Thread(target=motor_control_process,
+                          args=(motor_controller,key_presses)).start()
 print("Motor motion process has started on the server.")
 app = Flask(__name__)
 
@@ -43,11 +44,8 @@ def video_feed():
 def motor_control():
     if request.method == 'POST':
         keystrokes = request.json['data']
-        parent.send(keystrokes) # send keystrokes to pipe endpoint in motor process
-        print(keystrokes) # debug text
+        key_presses.put(keystrokes) # put the whole list in the queue as one item
     return ""
 
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=False)
-    motors.join()
+if __name__ == "__main__":
+    threading.Thread(target=lambda: app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)).start()

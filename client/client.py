@@ -2,7 +2,8 @@
 import requests
 import keyboard
 
-url = 'http://10.0.0.6:5000/motor_control'
+#url = 'http://10.0.0.6:5000/motor_control'
+url = 'http://127.0.0.1:5000/motor_control'
 
 keys = ['Right', 'Up', 'Down', 'Left', 'Ctrl+c']
 

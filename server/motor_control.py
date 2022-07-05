@@ -1,35 +1,35 @@
-#importing libraries
-import RPi.GPIO as GPIO
-#The specific elements from the libraries you require
-from time import sleep
 
+from time import sleep
 
 class MotorController:
 
     # Initialize everything to do with the motors
-    def __init__(self):
+    def __init__(self, robot_mode=True):
+        self.robot_mode = robot_mode
+        if robot_mode:
+            import RPi.GPIO as GPIO
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setwarnings(False)
 
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
+            #Reading the pins where the specific motors are wired up to
+            self.Motor1 = {'EN': 25, 'input1': 24, 'input2': 23}
+            self.Motor2 = {'EN': 17, 'input1': 27, 'input2': 22}
 
-        #Reading the pins where the specific motors are wired up to
-        self.Motor1 = {'EN': 25, 'input1': 24, 'input2': 23}
-        self.Motor2 = {'EN': 17, 'input1': 27, 'input2': 22}
+            for x in self.Motor1:
+                GPIO.setup(self.Motor1[x], GPIO.OUT)
+                GPIO.setup(self.Motor2[x], GPIO.OUT)
 
-        for x in self.Motor1:
-            GPIO.setup(self.Motor1[x], GPIO.OUT)
-            GPIO.setup(self.Motor2[x], GPIO.OUT)
+            #Setting the speed in which the motors will spin
+            self.EN1 = GPIO.PWM(self.Motor1['EN'], 100)    
+            self.EN2 = GPIO.PWM(self.Motor2['EN'], 100)    
 
-        #Setting the speed in which the motors will spin
-        self.EN1 = GPIO.PWM(self.Motor1['EN'], 100)    
-        self.EN2 = GPIO.PWM(self.Motor2['EN'], 100)    
-
-        #Start the motors as off
-        self.EN1.start(0)            
-        self.EN2.start(0)
+            #Start the motors as off
+            self.EN1.start(0)            
+            self.EN2.start(0)
 
 
     def move_forward(self):
+        if not self.robot_mode: return
         print ("FORWARD MOTION")
         #All motors move forwards
         for x in range(40,100):
@@ -42,6 +42,7 @@ class MotorController:
 
 
     def move_backward(self):
+        if not self.robot_mode: return
         print ("BACKWARD MOTION")
         #All motors move backwards
         for x in range(40,100):
@@ -54,6 +55,7 @@ class MotorController:
 
 
     def turn_left(self):
+        if not self.robot_mode: return
         print ("LEFT MOTION")
         #One motor moves forward, while the other moves backwards
         for x in range(40,100):
@@ -66,6 +68,7 @@ class MotorController:
 
 
     def turn_right(self):
+        if not self.robot_mode: return
         print ("RIGHT MOTION")
         #One motor moves backwards, while the other moves forwards
         for x in range(40,100):
@@ -78,6 +81,7 @@ class MotorController:
         
 
     def stop_moving(self):
+        if not self.robot_mode: return
         #If no arrow keys are pressed, motors are off
         self.EN1.ChangeDutyCycle(0)                                                 
         self.EN2.ChangeDutyCycle(0)

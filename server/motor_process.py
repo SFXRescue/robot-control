@@ -1,14 +1,17 @@
 
+from queue import Queue
+from motor_control import MotorController
+
 """function to run concurrently in app.py"""
-def motor_control_process(motor_controller, child):
+def motor_control_process(motor_controller : MotorController, key_presses : Queue):
 
     # initialize keys to empty
     keys = []
 
     while True:
 
-        if child.poll():
-            keys = child.recv()
+        if not key_presses.empty():
+            keys = key_presses.get()
             print(keys)
 
         if "Up" in keys:
